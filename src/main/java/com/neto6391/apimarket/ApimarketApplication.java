@@ -13,6 +13,7 @@ import com.neto6391.apimarket.domain.Address;
 import com.neto6391.apimarket.domain.Category;
 import com.neto6391.apimarket.domain.City;
 import com.neto6391.apimarket.domain.Client;
+import com.neto6391.apimarket.domain.ItemRequest;
 import com.neto6391.apimarket.domain.Payment;
 import com.neto6391.apimarket.domain.PaymentSlip;
 import com.neto6391.apimarket.domain.PaymentWithCreditCard;
@@ -25,6 +26,7 @@ import com.neto6391.apimarket.repositories.AddressRepository;
 import com.neto6391.apimarket.repositories.CategoryRepository;
 import com.neto6391.apimarket.repositories.CityRepository;
 import com.neto6391.apimarket.repositories.ClientRepository;
+import com.neto6391.apimarket.repositories.ItemRequestRepository;
 import com.neto6391.apimarket.repositories.PaymentRepository;
 import com.neto6391.apimarket.repositories.ProductRepository;
 import com.neto6391.apimarket.repositories.RequestRepository;
@@ -56,6 +58,9 @@ public class ApimarketApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PaymentRepository paymentRepository;
+	
+	@Autowired
+	private ItemRequestRepository itemRequestRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApimarketApplication.class, args);
@@ -121,6 +126,22 @@ public class ApimarketApplication implements CommandLineRunner {
 		
 		requestRepository.saveAll(Arrays.asList(req1, req2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
+		
+		
+		ItemRequest ip1 = new ItemRequest(req1, p1, 0.00, 1, 2000.00);
+		ItemRequest ip2 = new ItemRequest(req1, p3, 0.00, 2, 80.00);
+		ItemRequest ip3 = new ItemRequest(req2, p2, 100.00, 1, 800.00);
+		
+		//Associate Request with ItemRequests
+		req1.getItems().addAll(Arrays.asList(ip1, ip2));
+		req2.getItems().addAll(Arrays.asList(ip3));
+		
+		//Associate Product with ItemRequests
+		p1.getItems().addAll(Arrays.asList(ip1));
+		p2.getItems().addAll(Arrays.asList(ip3));
+		p3.getItems().addAll(Arrays.asList(ip2));
+		
+		itemRequestRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 	
 	

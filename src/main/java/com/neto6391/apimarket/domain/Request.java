@@ -2,6 +2,8 @@ package com.neto6391.apimarket.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -33,6 +36,11 @@ public class Request implements Serializable {
 	@JoinColumn(name="address_of_delivery_id")
 	private Address addressOfDelivery;
 
+	//Class Request to know items of request associate it
+	//Get Reference 'ItemRequest' on this attribute 'id' of 'ItemRequestPK'
+	@OneToMany(mappedBy="id.request")
+	private Set<ItemRequest> items = new HashSet<>();
+	
 	public Request() {}
 
 
@@ -86,6 +94,14 @@ public class Request implements Serializable {
 		this.addressOfDelivery = addressOfDelivery;
 	}
 
+	public Set<ItemRequest> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<ItemRequest> items) {
+		this.items = items;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
