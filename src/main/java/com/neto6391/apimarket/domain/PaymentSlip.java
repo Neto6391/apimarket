@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.neto6391.apimarket.domain.enums.StatePayment;
 
 @Entity
@@ -12,7 +13,10 @@ public class PaymentSlip extends Payment implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date dateVenciment;
+	
+	@JsonFormat(pattern="dd/MM/yyyy")
 	private Date datePayment;
 	
 	public PaymentSlip() {
