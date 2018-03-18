@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
 
 
 @Entity
@@ -22,8 +25,8 @@ public class State implements Serializable {
 	private Integer id;
 	private String nome;
 	
-	
-	@OneToMany(mappedBy="state", cascade = CascadeType.ALL)	
+	@JsonBackReference
+	@OneToMany(mappedBy="state")	
 	private List<City> cities = new ArrayList<>();
 
 	public State() {}

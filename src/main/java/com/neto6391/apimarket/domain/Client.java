@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -15,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neto6391.apimarket.domain.enums.TypeClient;
 
 @Entity
@@ -30,7 +30,9 @@ public class Client implements Serializable {
 	private String CpfOuCnpj;
 	private Integer tipo;
 	
-	@OneToMany(mappedBy="client", cascade = CascadeType.ALL)	
+	//Client Serializes Address
+	@JsonManagedReference
+	@OneToMany(mappedBy="client")	
 	private List<Address> addresses = new ArrayList<>();
 	
 	@ElementCollection
@@ -96,7 +98,6 @@ public class Client implements Serializable {
 		this.addresses = addresses;
 	}
 	
-	
 
 	public Set<String> getTelefones() {
 		return telefones;
@@ -129,8 +130,6 @@ public class Client implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-	
-	
+	}	
 	
 }
