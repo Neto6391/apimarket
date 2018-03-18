@@ -1,6 +1,7 @@
 package com.neto6391.apimarket;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,21 @@ import com.neto6391.apimarket.domain.Address;
 import com.neto6391.apimarket.domain.Category;
 import com.neto6391.apimarket.domain.City;
 import com.neto6391.apimarket.domain.Client;
+import com.neto6391.apimarket.domain.Payment;
+import com.neto6391.apimarket.domain.PaymentSlip;
+import com.neto6391.apimarket.domain.PaymentWithCreditCard;
 import com.neto6391.apimarket.domain.Product;
+import com.neto6391.apimarket.domain.Request;
 import com.neto6391.apimarket.domain.State;
+import com.neto6391.apimarket.domain.enums.StatePayment;
 import com.neto6391.apimarket.domain.enums.TypeClient;
 import com.neto6391.apimarket.repositories.AddressRepository;
 import com.neto6391.apimarket.repositories.CategoryRepository;
 import com.neto6391.apimarket.repositories.CityRepository;
 import com.neto6391.apimarket.repositories.ClientRepository;
+import com.neto6391.apimarket.repositories.PaymentRepository;
 import com.neto6391.apimarket.repositories.ProductRepository;
+import com.neto6391.apimarket.repositories.RequestRepository;
 import com.neto6391.apimarket.repositories.StateRepository;
 
 @SpringBootApplication
@@ -42,6 +50,12 @@ public class ApimarketApplication implements CommandLineRunner {
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private RequestRepository requestRepository;
+	
+	@Autowired
+	private PaymentRepository paymentRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ApimarketApplication.class, args);
@@ -92,6 +106,21 @@ public class ApimarketApplication implements CommandLineRunner {
 		clientRepository.saveAll(Arrays.asList(cli1));
 		addressRepository.saveAll(Arrays.asList(ad1, ad2));
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		
+		Request req1 = new Request(null, sdf.parse("30/09/2017 10:32"), cli1, ad1);
+		Request req2 = new Request(null, sdf.parse("10/10/2017 19:35"), cli1, ad2);
+		
+		Payment pay1 = new PaymentWithCreditCard(null, StatePayment.PAYED, req1, 6);
+		req1.setPayment(pay1);
+		
+		Payment pay2 = new PaymentSlip(null, StatePayment.PENDENT, req2, sdf.parse("20/10/2017 00:00"), null);
+		req2.setPayment(pay2);
+		
+		cli1.getRequests().addAll(Arrays.asList(req1, req2));
+		
+		requestRepository.saveAll(Arrays.asList(req1, req2));
+		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
 	}
 	
 	
